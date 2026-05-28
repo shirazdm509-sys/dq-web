@@ -72,6 +72,15 @@ class MDE_Widget_Category_Archive extends MDE_Widget_Base {
 			'default'      => 'yes',
 			'condition'    => array( 'show_sidebar' => 'yes' ),
 		) );
+		$this->add_control( 'sidebar_cats', array(
+			'label'        => __( 'دسته‌های ساید‌بار (انتخابی)', 'mde' ),
+			'description'  => __( 'دسته‌هایی که می‌خواهید در ساید‌بار نمایش داده شوند. خالی = همه دسته‌ها.', 'mde' ),
+			'type'         => Controls_Manager::SELECT2,
+			'options'      => MDE_Helpers::category_options(),
+			'multiple'     => true,
+			'label_block'  => true,
+			'condition'    => array( 'show_sidebar' => 'yes' ),
+		) );
 		$this->add_control( 'search_ph', array( 'label' => __( 'متن جستجو', 'mde' ), 'type' => Controls_Manager::TEXT, 'default' => __( 'جستجو در آرشیو…', 'mde' ) ) );
 		$this->add_control( 'cats_label', array( 'label' => __( 'عنوان دسته‌ها', 'mde' ), 'type' => Controls_Manager::TEXT, 'default' => __( 'دسته‌بندی‌ها', 'mde' ) ) );
 		$this->add_control( 'badge', array( 'label' => __( 'برچسب کارت', 'mde' ), 'type' => Controls_Manager::TEXT, 'default' => __( 'مقاله', 'mde' ) ) );
@@ -289,10 +298,15 @@ class MDE_Widget_Category_Archive extends MDE_Widget_Base {
 			echo '<form class="mde-cat-search" role="search" method="get" action="' . esc_url( home_url( '/' ) ) . '"><input type="search" name="s" placeholder="' . esc_attr( $s['search_ph'] ) . '" />' . MDE_Helpers::icon( 'search', 16 ) . '</form>'; // phpcs:ignore
 			echo '<div class="mde-cat-box__t" style="margin-bottom:12px;">' . esc_html( $s['cats_label'] ) . '</div>';
 			echo '<ul class="mde-cat-list">';
-			$cur  = is_category() ? get_queried_object_id() : 0;
-			$cat_args = array( 'hide_empty' => false );
-			if ( 'yes' === $s['top_level_only'] ) {
-				$cat_args['parent'] = 0;
+			$cur             = is_category() ? get_queried_object_id() : 0;
+			$sidebar_cat_ids = ! empty( $s['sidebar_cats'] ) ? MDE_Helpers::normalize_cat_ids( $s['sidebar_cats'] ) : array();
+			if ( ! empty( $sidebar_cat_ids ) ) {
+				$cat_args = array( 'include' => $sidebar_cat_ids, 'hide_empty' => false, 'orderby' => 'include' );
+			} else {
+				$cat_args = array( 'hide_empty' => false );
+				if ( 'yes' === $s['top_level_only'] ) {
+					$cat_args['parent'] = 0;
+				}
 			}
 			$cats = get_categories( $cat_args );
 			$dot  = array( '#0f766e', '#7c3aed', '#991b1b', '#1e293b', '#a16207', '#0369a1', '#be185d', '#5b21b6' );
