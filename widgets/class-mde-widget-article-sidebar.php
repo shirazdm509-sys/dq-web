@@ -395,21 +395,26 @@ class MDE_Widget_Article_Sidebar extends MDE_Widget_Base {
 		$parent_only = ( 'yes' === ( isset( $sec['cats_parent_only'] ) ? $sec['cats_parent_only'] : 'yes' ) );
 		$limit       = max( 1, (int) ( isset( $sec['cats_limit'] ) ? $sec['cats_limit'] : 10 ) );
 		$selected    = ! empty( $sec['cats_select'] ) ? MDE_Helpers::normalize_cat_ids( $sec['cats_select'] ) : array();
+		$totals      = MDE_Helpers::category_total_counts();
 
 		if ( ! empty( $selected ) ) {
-			$cats = get_categories( array( 'include' => $selected, 'hide_empty' => false, 'pad_counts' => true, 'orderby' => 'include' ) );
+			// Honour the chosen order; show all picked categories regardless of
+			// whether their own posts are zero (their sub-categories may hold them).
+			$cats = get_categories( array( 'include' => $selected, 'hide_empty' => false, 'orderby' => 'include' ) );
 		} else {
-			$args = array(
-				'hide_empty' => true,
-				'pad_counts' => true,
-				'number'     => $limit,
-				'orderby'    => 'count',
-				'order'      => 'DESC',
-			);
+			$args = array( 'hide_empty' => false );
 			if ( $parent_only ) {
 				$args['parent'] = 0;
 			}
 			$cats = get_categories( $args );
+			// Sort by TOTAL count (incl. descendants), drop empties, then limit.
+			$cats = array_filter( $cats, function ( $c ) use ( $totals ) {
+				return ! empty( $totals[ (int) $c->term_id ] );
+			} );
+			usort( $cats, function ( $a, $b ) use ( $totals ) {
+				return $totals[ (int) $b->term_id ] <=> $totals[ (int) $a->term_id ];
+			} );
+			$cats = array_slice( $cats, 0, $limit );
 		}
 		if ( empty( $cats ) ) {
 			echo '<p class="mde-asb__empty">' . esc_html__( 'دسته‌بندی‌ای موجود نیست.', 'mde' ) . '</p>';
@@ -418,10 +423,11 @@ class MDE_Widget_Article_Sidebar extends MDE_Widget_Base {
 
 		echo '<ul class="mde-asb__cats">';
 		foreach ( $cats as $c ) {
+			$total = isset( $totals[ (int) $c->term_id ] ) ? $totals[ (int) $c->term_id ] : (int) $c->count;
 			echo '<li><a class="mde-asb__cat" href="' . esc_url( get_category_link( $c->term_id ) ) . '">';
 			echo '<span>' . esc_html( $c->name ) . '</span>';
 			if ( $show_count ) {
-				echo '<span class="mde-num-badge">' . esc_html( MDE_Helpers::fa( $c->count ) ) . '</span>';
+				echo '<span class="mde-num-badge">' . esc_html( MDE_Helpers::fa( $total ) ) . '</span>';
 			}
 			echo '</a></li>';
 		}

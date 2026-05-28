@@ -3,7 +3,7 @@
  * Plugin Name:       مرکز نشر دستغیب — ویجت‌های المنتور
  * Plugin URI:        https://dastgheibqoba.info
  * Description:        مجموعه ویجت‌های اختصاصی المنتور برای سایت «مرکز نشر آثار و اندیشه‌های آیت‌الله دستغیب». شامل تمام بخش‌های صفحه اصلی، تک‌مقاله، دسته‌بندی و پخش زنده؛ کاملاً قابل تنظیم (فونت، رنگ، لوگو، تصاویر) با خواندن پویای مقالات، دسته‌ها و منو از وردپرس.
- * Version:           1.16.0
+ * Version:           1.17.0
  * Author:            Markaz Nashr Dastgheib
  * Text Domain:       mde
  * Domain Path:       /languages
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // No direct access.
 }
 
-define( 'MDE_VERSION', '1.16.0' );
+define( 'MDE_VERSION', '1.17.0' );
 define( 'MDE_FILE', __FILE__ );
 define( 'MDE_PATH', plugin_dir_path( __FILE__ ) );
 define( 'MDE_URL', plugin_dir_url( __FILE__ ) );

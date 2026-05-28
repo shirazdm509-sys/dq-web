@@ -128,14 +128,18 @@ final class MDE_Plugin {
 	 */
 	public function enqueue_styles() {
 		wp_enqueue_style( 'mde-fonts', 'https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap', array(), MDE_VERSION );
-		wp_enqueue_style( 'mde-styles', MDE_ASSETS . 'css/mde.css', array(), MDE_VERSION );
+		$css_path = MDE_PATH . 'assets/css/mde.css';
+		$css_ver  = file_exists( $css_path ) ? (string) filemtime( $css_path ) : MDE_VERSION;
+		wp_enqueue_style( 'mde-styles', MDE_ASSETS . 'css/mde.css', array(), $css_ver );
 	}
 
 	/**
 	 * Register the behaviour script (slider/tabs/player/progress/reveal/etc.).
 	 */
 	public function register_scripts() {
-		wp_register_script( 'mde-scripts', MDE_ASSETS . 'js/mde.js', array(), MDE_VERSION, true );
+		$js_path = MDE_PATH . 'assets/js/mde.js';
+		$js_ver  = file_exists( $js_path ) ? (string) filemtime( $js_path ) : MDE_VERSION;
+		wp_register_script( 'mde-scripts', MDE_ASSETS . 'js/mde.js', array(), $js_ver, true );
 		wp_localize_script(
 			'mde-scripts',
 			'mdeData',

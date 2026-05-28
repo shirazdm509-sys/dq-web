@@ -52,9 +52,15 @@ class MDE_Widget_Cta_Strip extends MDE_Widget_Base {
 		$this->add_group_control(
 			Group_Control_Background::get_type(),
 			array(
-				'name'     => 'live_bg',
-				'types'    => array( 'classic', 'gradient' ),
-				'selector' => '{{WRAPPER}} .mde-cta--live',
+				'name'           => 'live_bg',
+				'types'          => array( 'classic', 'gradient' ),
+				'selector'       => '{{WRAPPER}} .mde-cta--live',
+				'fields_options' => array(
+					'background'     => array( 'default' => 'gradient' ),
+					'color'          => array( 'default' => '#1a1a1a' ),
+					'color_b'        => array( 'default' => '#0a1f1d' ),
+					'gradient_angle' => array( 'default' => array( 'unit' => 'deg', 'size' => 135 ) ),
+				),
 			)
 		);
 		$this->end_controls_section();
@@ -66,9 +72,15 @@ class MDE_Widget_Cta_Strip extends MDE_Widget_Base {
 		$this->add_group_control(
 			Group_Control_Background::get_type(),
 			array(
-				'name'     => 'shop_bg',
-				'types'    => array( 'classic', 'gradient' ),
-				'selector' => '{{WRAPPER}} .mde-cta--shop',
+				'name'           => 'shop_bg',
+				'types'          => array( 'classic', 'gradient' ),
+				'selector'       => '{{WRAPPER}} .mde-cta--shop',
+				'fields_options' => array(
+					'background'     => array( 'default' => 'gradient' ),
+					'color'          => array( 'default' => '#e1e1e1' ),
+					'color_b'        => array( 'default' => '#8b6e3a' ),
+					'gradient_angle' => array( 'default' => array( 'unit' => 'deg', 'size' => 135 ) ),
+				),
 			)
 		);
 		$this->end_controls_section();

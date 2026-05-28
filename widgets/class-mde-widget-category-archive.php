@@ -300,10 +300,11 @@ class MDE_Widget_Category_Archive extends MDE_Widget_Base {
 			echo '<ul class="mde-cat-list">';
 			$cur             = is_category() ? get_queried_object_id() : 0;
 			$sidebar_cat_ids = ! empty( $s['sidebar_cats'] ) ? MDE_Helpers::normalize_cat_ids( $s['sidebar_cats'] ) : array();
+			$totals          = MDE_Helpers::category_total_counts();
 			if ( ! empty( $sidebar_cat_ids ) ) {
-				$cat_args = array( 'include' => $sidebar_cat_ids, 'hide_empty' => false, 'pad_counts' => true, 'orderby' => 'include' );
+				$cat_args = array( 'include' => $sidebar_cat_ids, 'hide_empty' => false, 'orderby' => 'include' );
 			} else {
-				$cat_args = array( 'hide_empty' => false, 'pad_counts' => true );
+				$cat_args = array( 'hide_empty' => false );
 				if ( 'yes' === $s['top_level_only'] ) {
 					$cat_args['parent'] = 0;
 				}
@@ -312,7 +313,8 @@ class MDE_Widget_Category_Archive extends MDE_Widget_Base {
 			$dot  = array( '#0f766e', '#7c3aed', '#991b1b', '#1e293b', '#a16207', '#0369a1', '#be185d', '#5b21b6' );
 			foreach ( $cats as $k => $c ) {
 				$active = ( $c->term_id === $cur ) ? 'is-active' : '';
-				echo '<li><a class="' . esc_attr( $active ) . '" href="' . esc_url( get_category_link( $c->term_id ) ) . '"><span style="display:flex;align-items:center;gap:8px;"><span class="dot" style="background:' . esc_attr( $dot[ $k % count( $dot ) ] ) . ';"></span>' . esc_html( $c->name ) . '</span><span class="mde-num-badge">' . esc_html( MDE_Helpers::fa( $c->count ) ) . '</span></a></li>';
+				$total  = isset( $totals[ (int) $c->term_id ] ) ? $totals[ (int) $c->term_id ] : (int) $c->count;
+				echo '<li><a class="' . esc_attr( $active ) . '" href="' . esc_url( get_category_link( $c->term_id ) ) . '"><span style="display:flex;align-items:center;gap:8px;"><span class="dot" style="background:' . esc_attr( $dot[ $k % count( $dot ) ] ) . ';"></span>' . esc_html( $c->name ) . '</span><span class="mde-num-badge">' . esc_html( MDE_Helpers::fa( $total ) ) . '</span></a></li>';
 			}
 			echo '</ul>';
 			echo '<div class="mde-cat-box"><div class="mde-cat-box__t">' . esc_html__( 'بازه زمانی', 'mde' ) . '</div>';

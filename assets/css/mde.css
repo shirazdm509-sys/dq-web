@@ -587,8 +587,12 @@ aside.mde-drawer__panel.mde-drawer__panel {
 .mde-cta { position: relative; border-radius: 20px; overflow: hidden; display: block; padding: 36px;
   min-height: 220px; color: #fff; transition: transform .3s var(--ease-out); }
 .mde-cta:hover { transform: translateY(-3px); }
-.mde-cta--live { background: linear-gradient(135deg, #1a1a1a 0%, #0a1f1d 100%); }
-.mde-cta--shop { background: linear-gradient(135deg, var(--c-accent) 0%, #8b6e3a 100%); }
+/* Default backgrounds are applied via the Elementor "Background" group
+ * control in the CTA-strip widget so the user can fully override them with
+ * a colour, gradient or image. These solid fallbacks only show if no value
+ * is ever set (keeps the white text readable). */
+.mde-cta--live { background-color: #0a1f1d; }
+.mde-cta--shop { background-color: #8b6e3a; }
 .mde-cta__blob { position: absolute; top: -100px; left: -100px; width: 400px; height: 400px;
   background: radial-gradient(circle, rgba(220,38,38,0.25), transparent 60%); filter: blur(40px);
   animation: mde-liveBlob 8s var(--ease-in-out) infinite alternate; }

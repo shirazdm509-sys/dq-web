@@ -199,6 +199,29 @@ class MDE_Helpers {
 	}
 
 	/**
+	 * Map of category term_id => total published-post count INCLUDING every
+	 * descendant. WordPress `pad_counts` only propagates child counts when the
+	 * children are part of the same query result, so it fails when we restrict
+	 * the query to parents only. Here we fetch the whole tree padded, then
+	 * expose a lookup so callers can show the real total for parent categories
+	 * that have posts only in their sub-categories.
+	 *
+	 * @return array<int,int>
+	 */
+	public static function category_total_counts() {
+		static $map = null;
+		if ( null !== $map ) {
+			return $map;
+		}
+		$map  = array();
+		$cats = get_categories( array( 'hide_empty' => false, 'pad_counts' => true ) );
+		foreach ( $cats as $c ) {
+			$map[ (int) $c->term_id ] = (int) $c->count;
+		}
+		return $map;
+	}
+
+	/**
 	 * Persian (Eastern Arabic) numerals — matches the prototype's toFa().
 	 *
 	 * @param string|int $value Value.
