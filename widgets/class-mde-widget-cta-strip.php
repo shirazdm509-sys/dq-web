@@ -11,6 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use Elementor\Controls_Manager;
+use Elementor\Group_Control_Background;
 
 class MDE_Widget_Cta_Strip extends MDE_Widget_Base {
 
@@ -42,6 +43,34 @@ class MDE_Widget_Cta_Strip extends MDE_Widget_Base {
 		$this->add_control( 's_text', array( 'label' => __( 'توضیح', 'mde' ), 'type' => Controls_Manager::TEXTAREA, 'default' => __( 'مجموعه کتاب‌های تفسیر قرآن، نهج‌البلاغه و سخنرانی‌های ایشان.', 'mde' ) ) );
 		$this->add_control( 's_btn', array( 'label' => __( 'متن دکمه', 'mde' ), 'type' => Controls_Manager::TEXT, 'default' => __( 'ورود به فروشگاه', 'mde' ) ) );
 		$this->add_control( 's_url', array( 'label' => __( 'پیوند', 'mde' ), 'type' => Controls_Manager::URL ) );
+		$this->end_controls_section();
+
+		$this->start_controls_section( 'sec_live_bg_style', array(
+			'label' => __( 'پس‌زمینه — پخش زنده', 'mde' ),
+			'tab'   => Controls_Manager::TAB_STYLE,
+		) );
+		$this->add_group_control(
+			Group_Control_Background::get_type(),
+			array(
+				'name'     => 'live_bg',
+				'types'    => array( 'classic', 'gradient' ),
+				'selector' => '{{WRAPPER}} .mde-cta--live',
+			)
+		);
+		$this->end_controls_section();
+
+		$this->start_controls_section( 'sec_shop_bg_style', array(
+			'label' => __( 'پس‌زمینه — فروشگاه', 'mde' ),
+			'tab'   => Controls_Manager::TAB_STYLE,
+		) );
+		$this->add_group_control(
+			Group_Control_Background::get_type(),
+			array(
+				'name'     => 'shop_bg',
+				'types'    => array( 'classic', 'gradient' ),
+				'selector' => '{{WRAPPER}} .mde-cta--shop',
+			)
+		);
 		$this->end_controls_section();
 
 		$this->start_controls_section( 'sec_btn_style', array(

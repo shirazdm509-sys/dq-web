@@ -301,9 +301,9 @@ class MDE_Widget_Category_Archive extends MDE_Widget_Base {
 			$cur             = is_category() ? get_queried_object_id() : 0;
 			$sidebar_cat_ids = ! empty( $s['sidebar_cats'] ) ? MDE_Helpers::normalize_cat_ids( $s['sidebar_cats'] ) : array();
 			if ( ! empty( $sidebar_cat_ids ) ) {
-				$cat_args = array( 'include' => $sidebar_cat_ids, 'hide_empty' => false, 'orderby' => 'include' );
+				$cat_args = array( 'include' => $sidebar_cat_ids, 'hide_empty' => false, 'pad_counts' => true, 'orderby' => 'include' );
 			} else {
-				$cat_args = array( 'hide_empty' => false );
+				$cat_args = array( 'hide_empty' => false, 'pad_counts' => true );
 				if ( 'yes' === $s['top_level_only'] ) {
 					$cat_args['parent'] = 0;
 				}

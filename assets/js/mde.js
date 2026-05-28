@@ -502,12 +502,12 @@
 	/* ---- Hero slider ---- */
 	function initHeroSlider( root ) {
 		root.querySelectorAll( '[data-mde-slider]:not([data-mde-bound])' ).forEach( function ( wrap ) {
-			wrap.setAttribute( 'data-mde-bound', '1' );
 			var slides = wrap.querySelectorAll( '.mde-hero-slide' );
 			var dots = wrap.querySelectorAll( '.mde-hero-dot' );
 			if ( slides.length < 2 ) {
 				return;
 			}
+			wrap.setAttribute( 'data-mde-bound', '1' );
 			var current = 0;
 			var autoplay = parseInt( wrap.getAttribute( 'data-autoplay' ) || '0', 10 );
 			var timer = null;
@@ -556,6 +556,7 @@
 			} );
 			wrap.addEventListener( 'mouseenter', stop );
 			wrap.addEventListener( 'mouseleave', start );
+			go( 0 );
 			start();
 		} );
 	}

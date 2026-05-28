@@ -397,10 +397,11 @@ class MDE_Widget_Article_Sidebar extends MDE_Widget_Base {
 		$selected    = ! empty( $sec['cats_select'] ) ? MDE_Helpers::normalize_cat_ids( $sec['cats_select'] ) : array();
 
 		if ( ! empty( $selected ) ) {
-			$cats = get_categories( array( 'include' => $selected, 'hide_empty' => false, 'orderby' => 'include' ) );
+			$cats = get_categories( array( 'include' => $selected, 'hide_empty' => false, 'pad_counts' => true, 'orderby' => 'include' ) );
 		} else {
 			$args = array(
 				'hide_empty' => true,
+				'pad_counts' => true,
 				'number'     => $limit,
 				'orderby'    => 'count',
 				'order'      => 'DESC',
