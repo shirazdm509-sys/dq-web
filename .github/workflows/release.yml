@@ -1,0 +1,56 @@
+name: Build & Release Plugin ZIP
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get plugin version
+        id: meta
+        run: |
+          VERSION=$(grep "Version:" markaz-dastgheib-elementor.php | head -1 | sed 's/.*Version:[[:space:]]*//' | tr -d ' \r')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Build ZIP
+        run: |
+          mkdir -p build/dq-web
+          rsync -a \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='build' \
+            --exclude='*.zip' \
+            . build/dq-web/
+          cd build
+          zip -r ../dq-web.zip dq-web/
+
+      - name: Delete old latest tag & release
+        run: |
+          gh release delete latest --yes 2>/dev/null || true
+          git push origin :refs/tags/latest 2>/dev/null || true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: "آخرین نسخه — v${{ steps.meta.outputs.version }}"
+          make_latest: true
+          files: dq-web.zip
+          body: |
+            ## نصب / به‌روزرسانی افزونه
+
+            ۱. فایل **`dq-web.zip`** را دانلود کنید
+            ۲. در پنل وردپرس بروید به: **افزونه‌ها ← افزودن ← آپلود افزونه**
+            ۳. فایل zip را انتخاب کنید و روی **«جایگزین کردن نسخه فعلی»** کلیک کنید
+
+            > نام پوشه داخل zip برابر `dq-web` است — وردپرس آن را جایگزین افزونه‌ی قبلی می‌کند.
