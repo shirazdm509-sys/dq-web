@@ -108,6 +108,15 @@ class MDE_Widget_Article_Sidebar extends MDE_Widget_Base {
 			'max'       => 50,
 			'condition' => array( 'type' => 'categories' ),
 		) );
+		$r->add_control( 'cats_select', array(
+			'label'       => __( 'دسته‌های خاص (اختیاری)', 'mde' ),
+			'description' => __( 'اگر انتخاب کنید، فقط همین دسته‌ها نمایش داده می‌شوند و تعداد بالا نادیده گرفته می‌شود.', 'mde' ),
+			'type'        => Controls_Manager::SELECT2,
+			'options'     => MDE_Helpers::category_options(),
+			'multiple'    => true,
+			'label_block' => true,
+			'condition'   => array( 'type' => 'categories' ),
+		) );
 
 		// Banner.
 		$r->add_control( 'banner_img', array(
@@ -385,17 +394,22 @@ class MDE_Widget_Article_Sidebar extends MDE_Widget_Base {
 		$show_count  = ( 'yes' === ( isset( $sec['cats_show_count'] ) ? $sec['cats_show_count'] : 'yes' ) );
 		$parent_only = ( 'yes' === ( isset( $sec['cats_parent_only'] ) ? $sec['cats_parent_only'] : 'yes' ) );
 		$limit       = max( 1, (int) ( isset( $sec['cats_limit'] ) ? $sec['cats_limit'] : 10 ) );
+		$selected    = ! empty( $sec['cats_select'] ) ? MDE_Helpers::normalize_cat_ids( $sec['cats_select'] ) : array();
 
-		$args = array(
-			'hide_empty' => true,
-			'number'     => $limit,
-			'orderby'    => 'count',
-			'order'      => 'DESC',
-		);
-		if ( $parent_only ) {
-			$args['parent'] = 0;
+		if ( ! empty( $selected ) ) {
+			$cats = get_categories( array( 'include' => $selected, 'hide_empty' => false, 'orderby' => 'include' ) );
+		} else {
+			$args = array(
+				'hide_empty' => true,
+				'number'     => $limit,
+				'orderby'    => 'count',
+				'order'      => 'DESC',
+			);
+			if ( $parent_only ) {
+				$args['parent'] = 0;
+			}
+			$cats = get_categories( $args );
 		}
-		$cats = get_categories( $args );
 		if ( empty( $cats ) ) {
 			echo '<p class="mde-asb__empty">' . esc_html__( 'دسته‌بندی‌ای موجود نیست.', 'mde' ) . '</p>';
 			return;
